@@ -1,49 +1,8 @@
+import { FormEnum, NumberEnum, TypeEnum, TypeofEnum } from './enums'
+
 type testFn = (value: any) => boolean;
 
-enum TypeEnum {
-  string = 'string',
-  number = 'number',
-  boolean = 'boolean',
-  symbol = 'symbol',
-  array = 'array',
-  map = 'map',
-  object = 'object',
-  set = 'set',
-  null = 'null',
-  undefined = 'undefined',
-  function = 'function'
-}
-
-enum FormEnum {
-  scalar = 'scalar',
-  array = 'array',
-  map = 'map',
-  object = 'object',
-  set = 'set',
-  function = 'function',
-  container = 'container',
-  void = 'void',
-}
-
-enum TypeofEnum {
-  undefined = "undefined",
-  object = "object",
-  boolean = "boolean",
-  number = "number",
-  bigint = "bigint",
-  string = "string",
-  symbol = "symbol",
-  function = "function"
-}
-
-enum NumberEnum {
-  infinite = "infinite",
-  nan = "nan",
-  integer = "integer",
-  decimal = "decimal",
-}
-
-class TypeDef {
+export class TypeDef {
   constructor(public readonly type: TypeEnum, public readonly form: FormEnum,
               public readonly typeOf: TypeofEnum,
               private test?: testFn) {
@@ -88,23 +47,28 @@ export const types: TypeDef[] = [
   new TypeDef(TypeEnum.object, FormEnum.object, TypeofEnum.object, (o) => o && (typeof o === 'object')),
 ]
 
-export const describe = (value: any, reflect = false): TypeDef | TypeEnum => {
+export function typeToForm(type: TypeEnum) : FormEnum {
+  const d = types.find(d => d.type === type);
+  return d?.form || FormEnum.void
+}
+
+export const describe = (value: any, reflect: string | boolean = false): TypeDef | TypeEnum | TypeofEnum | FormEnum => {
   if (reflect) {
-    const t = describe(value);
+    const t: TypeDef = describe(value) as TypeDef;
     if (typeof t === 'object') {
       if (reflect === true) {
         return t.type;
       }
-      if (typeof reflect === 'string') {
+      if (reflect === 'type' || reflect === 'form' || reflect === 'typeOf' || reflect === 'family') {
         return t[reflect]
       }
     }
     return t;
   }
-  const type: keyof typeof TypeofEnum = typeof (value);
+  const type = typeof (value);
   for (let i = 0; i < types.length; ++i) {
     const def = types[i];
-    if (def.includes(value, TypeofEnum[type])) {
+    if (def.includes(value, type)) {
       return def;
     }
   }

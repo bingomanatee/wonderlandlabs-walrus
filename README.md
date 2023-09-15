@@ -29,7 +29,7 @@ The 'typeof' paradigm is too coarse for some purposes and too broad for others. 
 Typescript does a good job of static checking, many times, values are not fixed at design 
 time, so its good to know precisely what they are at runtime. 
 
-The main utility of the type library is describe(value) which takes in any value
+The main utility of the type library is `describe(value)` which takes in any value
 and returns a TypeDef describer. 
 
 TypeDef has the following API:

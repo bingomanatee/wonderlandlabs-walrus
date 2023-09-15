@@ -4,6 +4,7 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
+    "preserveConstEnums": true,
     "moduleResolution": "Node",
     "types": ["vite/client", "node"],
     "strict": true,
